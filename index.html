@@ -1,0 +1,3559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>The Climate Conflict — From Awareness to Action</title>
+
+<meta name="description"
+content="The Climate Conflict — an interactive climate education and simulation platform.">
+
+<style>
+:root{
+    --bg:#071018;
+    --panel:#0c1721;
+    --panel2:#101f2c;
+    --line:rgba(255,255,255,.10);
+    --text:#f4f8fb;
+    --muted:#91a6b7;
+
+    --green:#39e6a5;
+    --blue:#35bdf4;
+    --orange:#ffb454;
+    --purple:#a987ff;
+    --red:#ff647d;
+    --yellow:#ffd166;
+    --cyan:#4de5ff;
+    --white:#ffffff;
+}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Inter,Segoe UI,Arial,sans-serif;
+    background:
+        radial-gradient(circle at 20% 10%,rgba(53,189,244,.08),transparent 30%),
+        radial-gradient(circle at 80% 40%,rgba(57,230,165,.06),transparent 30%),
+        var(--bg);
+    color:var(--text);
+    overflow-x:hidden;
+}
+
+button,
+input{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+/* =========================
+   NAVIGATION
+========================= */
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    bottom:0;
+    width:245px;
+    background:rgba(6,15,22,.94);
+    border-right:1px solid var(--line);
+    backdrop-filter:blur(18px);
+    z-index:1000;
+    padding:24px 16px;
+    display:flex;
+    flex-direction:column;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:8px 10px 25px;
+}
+
+.logo-mark{
+    width:42px;
+    height:42px;
+    border-radius:13px;
+    display:grid;
+    place-items:center;
+    background:linear-gradient(135deg,var(--green),var(--blue));
+    color:#061018;
+    font-weight:900;
+    box-shadow:0 0 30px rgba(57,230,165,.25);
+}
+
+.logo-text strong{
+    display:block;
+    font-size:14px;
+    letter-spacing:.5px;
+}
+
+.logo-text span{
+    font-size:10px;
+    color:var(--muted);
+}
+
+.nav-label{
+    font-size:9px;
+    color:#61798b;
+    letter-spacing:2px;
+    margin:15px 11px 7px;
+}
+
+.nav-link{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:11px 12px;
+    border-radius:10px;
+    color:#9fb1bf;
+    text-decoration:none;
+    font-size:12px;
+    margin:2px 0;
+    transition:.2s;
+}
+
+.nav-link:hover,
+.nav-link.active{
+    background:rgba(57,230,165,.09);
+    color:#fff;
+}
+
+.nav-link.active{
+    border-left:3px solid var(--green);
+}
+
+.status-card{
+    margin-top:auto;
+    padding:14px;
+    border:1px solid var(--line);
+    border-radius:13px;
+    background:#0b1620;
+}
+
+.status-dot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:var(--green);
+    box-shadow:0 0 12px var(--green);
+    display:inline-block;
+    margin-right:6px;
+}
+
+.status-card small{
+    color:#718899;
+    font-size:9px;
+}
+
+.status-card strong{
+    font-size:12px;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+main{
+    margin-left:245px;
+}
+
+section{
+    padding:90px 5vw;
+    position:relative;
+}
+
+.section-kicker{
+    color:var(--green);
+    font-size:10px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    margin-bottom:10px;
+}
+
+.section-title{
+    font-size:clamp(30px,4vw,55px);
+    line-height:1;
+    margin-bottom:15px;
+}
+
+.section-description{
+    max-width:760px;
+    color:var(--muted);
+    line-height:1.7;
+    font-size:14px;
+}
+
+/* =========================
+   HOME SLIDESHOW
+========================= */
+
+#home{
+    min-height:100vh;
+    padding:0;
+    display:flex;
+    align-items:stretch;
+}
+
+.hero-slideshow{
+    position:relative;
+    width:100%;
+    min-height:100vh;
+    overflow:hidden;
+}
+
+.hero-slide{
+    position:absolute;
+    inset:0;
+    background-size:cover;
+    background-position:center;
+    opacity:0;
+    transform:scale(1.06);
+    transition:opacity 1.2s ease,transform 8s ease;
+}
+
+.hero-slide.active{
+    opacity:1;
+    transform:scale(1);
+}
+
+.hero-slide::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+        linear-gradient(90deg,
+            rgba(4,11,17,.94) 0%,
+            rgba(4,11,17,.72) 37%,
+            rgba(4,11,17,.20) 75%,
+            rgba(4,11,17,.55) 100%),
+        linear-gradient(0deg,
+            rgba(4,11,17,.9),
+            transparent 45%);
+}
+
+.hero-content{
+    position:relative;
+    z-index:3;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    padding:70px 8%;
+    max-width:1000px;
+}
+
+.hero-copy{
+    max-width:680px;
+}
+
+.hero-tag{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 12px;
+    border:1px solid rgba(57,230,165,.3);
+    border-radius:30px;
+    background:rgba(7,20,27,.5);
+    color:var(--green);
+    font-size:10px;
+    letter-spacing:2px;
+    margin-bottom:22px;
+}
+
+.hero-title{
+    font-size:clamp(45px,7vw,92px);
+    line-height:.9;
+    letter-spacing:-4px;
+    margin-bottom:25px;
+}
+
+.hero-title span{
+    color:var(--green);
+}
+
+.hero-text{
+    color:#c2d0da;
+    max-width:620px;
+    line-height:1.8;
+    font-size:15px;
+}
+
+.hero-actions{
+    display:flex;
+    gap:12px;
+    margin-top:30px;
+    flex-wrap:wrap;
+}
+
+.btn{
+    border:1px solid var(--line);
+    background:#0d1a24;
+    color:white;
+    border-radius:10px;
+    padding:13px 19px;
+    text-decoration:none;
+    font-size:11px;
+    transition:.2s;
+}
+
+.btn:hover{
+    transform:translateY(-2px);
+}
+
+.btn.primary{
+    background:var(--green);
+    color:#061018;
+    border-color:var(--green);
+    font-weight:800;
+}
+
+.slide-info{
+    position:absolute;
+    z-index:4;
+    right:5%;
+    bottom:35px;
+    width:280px;
+    padding:15px;
+    background:rgba(7,16,24,.68);
+    border:1px solid rgba(255,255,255,.13);
+    backdrop-filter:blur(15px);
+    border-radius:13px;
+}
+
+.slide-info small{
+    color:var(--green);
+    font-size:9px;
+    letter-spacing:2px;
+}
+
+.slide-info strong{
+    display:block;
+    margin-top:6px;
+    font-size:14px;
+}
+
+.slide-info p{
+    color:#9eb0bd;
+    font-size:10px;
+    margin-top:5px;
+    line-height:1.5;
+}
+
+.slide-dots{
+    display:flex;
+    gap:6px;
+    margin-top:12px;
+}
+
+.slide-dot{
+    width:25px;
+    height:3px;
+    border:0;
+    background:#536572;
+    border-radius:4px;
+}
+
+.slide-dot.active{
+    background:var(--green);
+}
+
+/* =========================
+   STATS
+========================= */
+
+.stats-row{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    border:1px solid var(--line);
+    background:#0a151e;
+}
+
+.stat{
+    padding:24px;
+    border-right:1px solid var(--line);
+}
+
+.stat:last-child{
+    border-right:0;
+}
+
+.stat-value{
+    font-size:30px;
+    font-weight:800;
+}
+
+.stat-label{
+    color:#728999;
+    font-size:10px;
+    margin-top:5px;
+}
+
+/* =========================
+   IMAGE WALL
+========================= */
+
+.image-wall{
+    margin-top:45px;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+}
+
+.image-card{
+    position:relative;
+    min-height:250px;
+    overflow:hidden;
+    border-radius:14px;
+    border:1px solid var(--line);
+    background:#0c1720;
+}
+
+.image-card.large{
+    grid-column:span 2;
+}
+
+.image-card img{
+    width:100%;
+    height:100%;
+    min-height:250px;
+    object-fit:cover;
+    display:block;
+    transition:.5s;
+}
+
+.image-card:hover img{
+    transform:scale(1.06);
+}
+
+.image-overlay{
+    position:absolute;
+    inset:0;
+    background:linear-gradient(0deg,rgba(3,9,14,.92),transparent 60%);
+    display:flex;
+    align-items:flex-end;
+    padding:18px;
+}
+
+.image-overlay small{
+    color:#9eafba;
+    font-size:9px;
+    display:block;
+    margin-top:4px;
+}
+
+/* =========================
+   COLOUR SYSTEMS
+========================= */
+
+.color-energy{--accent:var(--green);}
+.color-water{--accent:var(--blue);}
+.color-agri{--accent:var(--orange);}
+.color-tech{--accent:var(--purple);}
+.color-risk{--accent:var(--red);}
+.color-people{--accent:var(--yellow);}
+
+.factor-card{
+    border-top:3px solid var(--accent);
+    box-shadow:inset 0 10px 30px color-mix(in srgb,var(--accent),transparent 94%);
+}
+
+.factor-card .factor-icon{
+    color:var(--accent);
+}
+
+/* =========================
+   FACTOR CARDS
+========================= */
+
+.factor-grid{
+    margin-top:45px;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:14px;
+}
+
+.factor-card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    overflow:hidden;
+}
+
+.factor-image{
+    height:155px;
+    overflow:hidden;
+}
+
+.factor-image img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transition:.4s;
+}
+
+.factor-card:hover img{
+    transform:scale(1.08);
+}
+
+.factor-body{
+    padding:17px;
+}
+
+.factor-icon{
+    font-size:22px;
+}
+
+.factor-body h3{
+    font-size:14px;
+    margin:8px 0;
+}
+
+.factor-body p{
+    color:#8195a5;
+    font-size:10px;
+    line-height:1.6;
+}
+
+/* =========================
+   SIMULATOR
+========================= */
+
+.simulator{
+    background:
+        linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.015) 1px,transparent 1px),
+        #071019;
+    background-size:30px 30px;
+}
+
+.simulator-layout{
+    display:grid;
+    grid-template-columns:330px 1fr;
+    gap:18px;
+    margin-top:45px;
+}
+
+.controls{
+    background:#0a151f;
+    border:1px solid var(--line);
+    border-radius:15px;
+    padding:20px;
+    max-height:850px;
+    overflow:auto;
+}
+
+.controls::-webkit-scrollbar{
+    width:5px;
+}
+
+.controls::-webkit-scrollbar-thumb{
+    background:#29404f;
+    border-radius:10px;
+}
+
+.controls-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.controls-head strong{
+    font-size:14px;
+}
+
+.live{
+    font-size:8px;
+    color:var(--green);
+    border:1px solid rgba(57,230,165,.3);
+    padding:5px 7px;
+    border-radius:20px;
+}
+
+.control{
+    padding:13px 0;
+    border-bottom:1px solid rgba(255,255,255,.06);
+}
+
+.control:last-child{
+    border-bottom:0;
+}
+
+.control-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:8px;
+}
+
+.control-name{
+    font-size:10px;
+    color:#c4d1da;
+}
+
+.control-value{
+    font-size:10px;
+    font-weight:800;
+}
+
+input[type=range]{
+    width:100%;
+    appearance:none;
+    height:4px;
+    background:#253641;
+    border-radius:10px;
+    outline:none;
+}
+
+input[type=range]::-webkit-slider-thumb{
+    appearance:none;
+    width:14px;
+    height:14px;
+    border-radius:50%;
+    background:var(--accent,var(--green));
+    border:2px solid #071018;
+    box-shadow:0 0 10px color-mix(in srgb,var(--accent,var(--green)),transparent 35%);
+}
+
+/* =========================
+   WORLD DISPLAY
+========================= */
+
+.world-panel{
+    min-width:0;
+}
+
+.world-image{
+    position:relative;
+    height:570px;
+    border-radius:16px;
+    overflow:hidden;
+    border:1px solid var(--line);
+    background:#09141c;
+}
+
+.world-image img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+    transition:opacity .45s,transform .8s;
+}
+
+.world-image.changing img{
+    opacity:.25;
+    transform:scale(1.03);
+}
+
+.world-image::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    background:
+        linear-gradient(90deg,rgba(3,10,15,.72),transparent 55%),
+        linear-gradient(0deg,rgba(3,10,15,.72),transparent 50%);
+}
+
+.world-status{
+    position:absolute;
+    z-index:3;
+    left:22px;
+    top:20px;
+    padding:8px 11px;
+    border-radius:20px;
+    background:rgba(5,15,21,.78);
+    border:1px solid rgba(255,255,255,.12);
+    backdrop-filter:blur(10px);
+    font-size:9px;
+}
+
+.world-status span{
+    width:7px;
+    height:7px;
+    display:inline-block;
+    border-radius:50%;
+    background:var(--green);
+    margin-right:5px;
+    box-shadow:0 0 8px var(--green);
+}
+
+.world-caption{
+    position:absolute;
+    z-index:3;
+    left:24px;
+    bottom:25px;
+    max-width:470px;
+}
+
+.world-caption .category{
+    color:var(--green);
+    font-size:9px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+}
+
+.world-caption h2{
+    font-size:32px;
+    margin:6px 0;
+}
+
+.world-caption p{
+    color:#b4c2cb;
+    font-size:11px;
+    line-height:1.6;
+}
+
+.world-source{
+    position:absolute;
+    z-index:3;
+    right:18px;
+    bottom:17px;
+    color:#91a2ae;
+    font-size:8px;
+    background:rgba(0,0,0,.35);
+    padding:5px 8px;
+    border-radius:5px;
+}
+
+.visual-effects{
+    position:absolute;
+    inset:0;
+    z-index:2;
+    pointer-events:none;
+}
+
+.effect{
+    position:absolute;
+    border-radius:50%;
+    filter:blur(35px);
+    opacity:.18;
+}
+
+.effect.green{
+    width:180px;
+    height:180px;
+    background:var(--green);
+    right:12%;
+    top:15%;
+}
+
+.effect.red{
+    width:200px;
+    height:200px;
+    background:var(--red);
+    left:35%;
+    bottom:10%;
+}
+
+.effect.blue{
+    width:180px;
+    height:180px;
+    background:var(--blue);
+    right:20%;
+    bottom:10%;
+}
+
+.metrics{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    margin-top:12px;
+}
+
+.metric{
+    background:#0a151f;
+    border:1px solid var(--line);
+    padding:17px;
+    border-radius:12px;
+}
+
+.metric-label{
+    color:#738998;
+    font-size:9px;
+}
+
+.metric-number{
+    font-size:25px;
+    font-weight:800;
+    margin-top:5px;
+}
+
+.metric-bar{
+    height:4px;
+    background:#1c2b35;
+    margin-top:9px;
+    border-radius:5px;
+    overflow:hidden;
+}
+
+.metric-bar div{
+    height:100%;
+    background:var(--green);
+    width:50%;
+    transition:.4s;
+}
+
+/* =========================
+   RESPONSE FEED
+========================= */
+
+.response-box{
+    margin-top:12px;
+    background:#0a151f;
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:18px;
+}
+
+.response-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.response-head strong{
+    font-size:11px;
+}
+
+.response-head span{
+    font-size:9px;
+    color:var(--green);
+}
+
+.response-box p{
+    margin-top:9px;
+    color:#94a8b6;
+    font-size:11px;
+    line-height:1.7;
+}
+
+/* =========================
+   OBJECTS
+========================= */
+
+.object-grid{
+    margin-top:45px;
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:12px;
+}
+
+.object-card{
+    background:#0b1720;
+    border:1px solid var(--line);
+    border-radius:12px;
+    overflow:hidden;
+}
+
+.object-card img{
+    width:100%;
+    height:140px;
+    object-fit:cover;
+}
+
+.object-info{
+    padding:12px;
+}
+
+.object-info strong{
+    font-size:11px;
+}
+
+.object-info p{
+    color:#718697;
+    font-size:9px;
+    margin-top:5px;
+    line-height:1.5;
+}
+
+/* =========================
+   PEOPLE
+========================= */
+
+.people-section{
+    background:
+        radial-gradient(circle at 80% 20%,rgba(255,209,102,.08),transparent 30%),
+        #09131c;
+}
+
+.people-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+    margin-top:45px;
+}
+
+.person-card{
+    position:relative;
+    height:360px;
+    overflow:hidden;
+    border-radius:15px;
+    border:1px solid var(--line);
+}
+
+.person-card img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transition:.5s;
+}
+
+.person-card:hover img{
+    transform:scale(1.05);
+}
+
+.person-card::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(0deg,rgba(3,9,14,.92),transparent 65%);
+}
+
+.person-text{
+    position:absolute;
+    z-index:2;
+    bottom:20px;
+    left:20px;
+    right:20px;
+}
+
+.person-text small{
+    color:var(--yellow);
+    font-size:9px;
+    letter-spacing:2px;
+}
+
+.person-text h3{
+    margin-top:6px;
+}
+
+.person-text p{
+    color:#9dafbb;
+    font-size:10px;
+    line-height:1.5;
+    margin-top:5px;
+}
+
+/* =========================
+   SCENARIOS
+========================= */
+
+.scenario-grid{
+    margin-top:40px;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+}
+
+.scenario{
+    text-align:left;
+    padding:18px;
+    border:1px solid var(--line);
+    border-radius:12px;
+    background:#0b1720;
+    color:#fff;
+    transition:.2s;
+}
+
+.scenario:hover{
+    transform:translateY(-3px);
+    border-color:var(--green);
+}
+
+.scenario strong{
+    display:block;
+    font-size:12px;
+}
+
+.scenario span{
+    display:block;
+    color:#718797;
+    font-size:9px;
+    margin-top:6px;
+}
+
+/* =========================
+   PRODUCT
+========================= */
+
+.product-layout{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:30px;
+    align-items:center;
+    margin-top:45px;
+}
+
+.product-image{
+    height:470px;
+    border-radius:18px;
+    overflow:hidden;
+    border:1px solid var(--line);
+}
+
+.product-image img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.product-list{
+    margin-top:25px;
+    display:grid;
+    gap:9px;
+}
+
+.product-item{
+    padding:13px;
+    border:1px solid var(--line);
+    border-radius:9px;
+    background:#0b1720;
+    color:#9eb0bd;
+    font-size:10px;
+}
+
+.product-item strong{
+    color:#fff;
+}
+
+/* =========================
+   EXPERIMENT
+========================= */
+
+.experiment{
+    background:#09141d;
+}
+
+.experiment-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+    margin-top:40px;
+}
+
+.experiment-card{
+    background:#0c1822;
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:22px;
+}
+
+.experiment-card h3{
+    font-size:14px;
+    margin-bottom:15px;
+}
+
+.step{
+    display:flex;
+    gap:12px;
+    padding:12px 0;
+    border-bottom:1px solid rgba(255,255,255,.06);
+}
+
+.step:last-child{
+    border:0;
+}
+
+.step-number{
+    width:25px;
+    height:25px;
+    min-width:25px;
+    display:grid;
+    place-items:center;
+    background:var(--green);
+    color:#061018;
+    border-radius:50%;
+    font-size:10px;
+    font-weight:900;
+}
+
+.step p{
+    color:#8da1af;
+    font-size:10px;
+    line-height:1.6;
+}
+
+/* =========================
+   SOURCES
+========================= */
+
+.sources-grid{
+    margin-top:35px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+}
+
+.source{
+    padding:16px;
+    background:#0b1720;
+    border:1px solid var(--line);
+    border-radius:10px;
+}
+
+.source strong{
+    font-size:11px;
+}
+
+.source p{
+    color:#718797;
+    font-size:9px;
+    margin-top:6px;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+    padding:35px 5vw;
+    border-top:1px solid var(--line);
+    margin-left:245px;
+    color:#687d8d;
+    font-size:9px;
+    line-height:1.7;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:1150px){
+    .sidebar{
+        width:190px;
+    }
+
+    main,
+    footer{
+        margin-left:190px;
+    }
+
+    .factor-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .object-grid{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+    .scenario-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:850px){
+    .sidebar{
+        position:relative;
+        width:100%;
+        height:auto;
+        padding:12px;
+    }
+
+    .sidebar nav,
+    .nav-label,
+    .status-card{
+        display:none;
+    }
+
+    .logo{
+        padding:5px;
+    }
+
+    main,
+    footer{
+        margin-left:0;
+    }
+
+    section{
+        padding:65px 5%;
+    }
+
+    .hero-content{
+        padding:60px 6%;
+    }
+
+    .hero-title{
+        letter-spacing:-2px;
+    }
+
+    .slide-info{
+        display:none;
+    }
+
+    .stats-row{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .stat:nth-child(2){
+        border-right:0;
+    }
+
+    .simulator-layout,
+    .product-layout,
+    .experiment-grid{
+        grid-template-columns:1fr;
+    }
+
+    .world-image{
+        height:450px;
+    }
+
+    .people-grid{
+        grid-template-columns:1fr;
+    }
+
+    .sources-grid{
+        grid-template-columns:1fr;
+    }
+
+    .image-wall{
+        grid-template-columns:1fr 1fr;
+    }
+}
+
+@media(max-width:550px){
+    .factor-grid,
+    .object-grid,
+    .scenario-grid,
+    .image-wall{
+        grid-template-columns:1fr;
+    }
+
+    .image-card.large{
+        grid-column:span 1;
+    }
+
+    .metrics{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .hero-title{
+        font-size:48px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+        <div class="logo-mark">CC</div>
+
+        <div class="logo-text">
+            <strong>CLIMATE CONFLICT</strong>
+            <span>FROM AWARENESS TO ACTION</span>
+        </div>
+    </div>
+
+    <div class="nav-label">PLATFORM</div>
+
+    <a href="#home" class="nav-link active">⌂ Home</a>
+    <a href="#evidence" class="nav-link">◉ Evidence</a>
+    <a href="#systems" class="nav-link">◈ Systems</a>
+    <a href="#simulator" class="nav-link">◫ Simulator</a>
+    <a href="#people" class="nav-link">♟ People</a>
+    <a href="#product" class="nav-link">▣ Product</a>
+    <a href="#experiment" class="nav-link">⌁ Experiment</a>
+
+    <div class="status-card">
+        <div>
+            <span class="status-dot"></span>
+            <strong>SIMULATION ONLINE</strong>
+        </div>
+        <small>Educational climate model</small>
+    </div>
+
+</aside>
+
+
+<main>
+
+<!-- =====================================================
+     HOME
+===================================================== -->
+
+<section id="home">
+
+    <div class="hero-slideshow">
+
+        <!-- DIFFERENT HOME IMAGES ONLY -->
+
+        <div class="hero-slide active"
+             style="background-image:url('https://images.unsplash.com/photo-1446776877081-d282a0f896e2?auto=format&fit=crop&w=2200&q=90');">
+        </div>
+
+        <div class="hero-slide"
+             style="background-image:url('https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&w=2200&q=90');">
+        </div>
+
+        <div class="hero-slide"
+             style="background-image:url('https://images.unsplash.com/photo-1497250681960-ef046c08a56e?auto=format&fit=crop&w=2200&q=90');">
+        </div>
+
+        <div class="hero-slide"
+             style="background-image:url('https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=2200&q=90');">
+        </div>
+
+        <div class="hero-slide"
+             style="background-image:url('https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=2200&q=90');">
+        </div>
+
+        <div class="hero-content">
+
+            <div class="hero-copy">
+
+                <div class="hero-tag">
+                    ● INTERACTIVE CLIMATE LAB
+                </div>
+
+                <h1 class="hero-title">
+                    THE<br>
+                    CLIMATE<br>
+                    <span>CONFLICT</span>
+                </h1>
+
+                <p class="hero-text">
+                    Explore how energy, transport, forests, agriculture,
+                    water, technology, cities and human decisions interact
+                    to shape the climate system.
+                </p>
+
+                <div class="hero-actions">
+                    <a href="#simulator" class="btn primary">
+                        ENTER SIMULATOR →
+                    </a>
+
+                    <a href="#evidence" class="btn">
+                        EXPLORE EVIDENCE
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="slide-info">
+
+            <small id="slideCategory">
+                EARTH OBSERVATION
+            </small>
+
+            <strong id="slideTitle">
+                One planet. Many systems.
+            </strong>
+
+            <p id="slideDescription">
+                Climate change is connected to natural systems,
+                technology and human activity.
+            </p>
+
+            <div class="slide-dots" id="slideDots"></div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     GLOBAL STATS
+===================================================== -->
+
+<section>
+
+    <div class="stats-row">
+
+        <div class="stat">
+            <div class="stat-value">20+</div>
+            <div class="stat-label">CONTROLLABLE FACTORS</div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-value">06</div>
+            <div class="stat-label">SYSTEM COLOUR GROUPS</div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-value">30+</div>
+            <div class="stat-label">REAL-WORLD PHOTOS</div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-value">01</div>
+            <div class="stat-label">INTERACTIVE WORLD MODEL</div>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     EVIDENCE
+===================================================== -->
+
+<section id="evidence">
+
+    <div class="section-kicker">01 / REAL WORLD</div>
+
+    <h2 class="section-title">
+        The climate system<br>is everywhere.
+    </h2>
+
+    <p class="section-description">
+        Climate change is not one isolated problem. It connects forests,
+        oceans, cities, agriculture, energy, transport, people and technology.
+    </p>
+
+
+    <div class="image-wall">
+
+        <div class="image-card large">
+            <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1400&q=85"
+                 alt="Forest landscape">
+            <div class="image-overlay">
+                <div>
+                    <strong>FORESTS</strong>
+                    <small>Carbon storage • biodiversity • rainfall</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="image-card">
+            <img src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=1000&q=85"
+                 alt="City">
+            <div class="image-overlay">
+                <div>
+                    <strong>CITIES</strong>
+                    <small>Buildings • heat • transport</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="image-card">
+            <img src="https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=1000&q=85"
+                 alt="Solar panels">
+            <div class="image-overlay">
+                <div>
+                    <strong>ENERGY</strong>
+                    <small>Solar • electricity • transition</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="image-card">
+            <img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=1000&q=85"
+                 alt="Wind turbines">
+            <div class="image-overlay">
+                <div>
+                    <strong>WIND POWER</strong>
+                    <small>Renewable electricity infrastructure</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="image-card">
+            <img src="https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=1000&q=85"
+                 alt="Agriculture">
+            <div class="image-overlay">
+                <div>
+                    <strong>AGRICULTURE</strong>
+                    <small>Food • soil • water • land</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="image-card large">
+            <img src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=1400&q=85"
+                 alt="Ocean">
+            <div class="image-overlay">
+                <div>
+                    <strong>OCEANS</strong>
+                    <small>Heat • ecosystems • coastal communities</small>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     SYSTEMS
+===================================================== -->
+
+<section id="systems">
+
+    <div class="section-kicker">02 / SYSTEMS</div>
+
+    <h2 class="section-title">Many systems.<br>One planet.</h2>
+
+    <p class="section-description">
+        Each system has its own role. The simulator allows you to adjust
+        their conditions and observe how the wider system responds.
+    </p>
+
+
+    <div class="factor-grid">
+
+        <div class="factor-card color-energy">
+
+            <div class="factor-image">
+                <img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=900&q=85">
+            </div>
+
+            <div class="factor-body">
+                <div class="factor-icon">☀</div>
+                <h3>Energy</h3>
+                <p>
+                    Renewable energy, fossil fuels, electricity and technology.
+                </p>
+            </div>
+
+        </div>
+
+
+        <div class="factor-card color-water">
+
+            <div class="factor-image">
+                <img src="https://images.unsplash.com/photo-1538300342682-cf57afb97285?auto=format&fit=crop&w=900&q=85">
+            </div>
+
+            <div class="factor-body">
+                <div class="factor-icon">◉</div>
+                <h3>Water</h3>
+                <p>
+                    Water availability, efficiency, drought and reservoirs.
+                </p>
+            </div>
+
+        </div>
+
+
+        <div class="factor-card color-agri">
+
+            <div class="factor-image">
+                <img src="https://images.unsplash.com/photo-1499529112087-3cb3b73cec95?auto=format&fit=crop&w=900&q=85">
+            </div>
+
+            <div class="factor-body">
+                <div class="factor-icon">⌁</div>
+                <h3>Agriculture</h3>
+                <p>
+                    Crops, livestock, soil, food systems and land use.
+                </p>
+            </div>
+
+        </div>
+
+
+        <div class="factor-card color-tech">
+
+            <div class="factor-image">
+                <img src="https://images.unsplash.com/photo-1535378917042-10a22c95931a?auto=format&fit=crop&w=900&q=85">
+            </div>
+
+            <div class="factor-body">
+                <div class="factor-icon">⌬</div>
+                <h3>Technology</h3>
+                <p>
+                    Innovation, monitoring, clean technology and data.
+                </p>
+            </div>
+
+        </div>
+
+
+        <div class="factor-card color-risk">
+
+            <div class="factor-image">
+                <img src="https://images.unsplash.com/photo-1547683905-f686c993aae5?auto=format&fit=crop&w=900&q=85">
+            </div>
+
+            <div class="factor-body">
+                <div class="factor-icon">⚠</div>
+                <h3>Climate Risk</h3>
+                <p>
+                    Heat, extreme weather, fires, flooding and ecosystem stress.
+                </p>
+            </div>
+
+        </div>
+
+
+        <div class="factor-card color-people">
+
+            <div class="factor-image">
+                <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=900&q=85">
+            </div>
+
+            <div class="factor-body">
+                <div class="factor-icon">♟</div>
+                <h3>People</h3>
+                <p>
+                    Communities, awareness, adaptation and collective action.
+                </p>
+            </div>
+
+        </div>
+
+
+        <div class="factor-card color-water">
+
+            <div class="factor-image">
+                <img src="https://images.unsplash.com/photo-1437482078695-73f5ca6c96e2?auto=format&fit=crop&w=900&q=85">
+            </div>
+
+            <div class="factor-body">
+                <div class="factor-icon">≈</div>
+                <h3>Oceans</h3>
+                <p>
+                    Marine ecosystems, coastlines, warming and protection.
+                </p>
+            </div>
+
+        </div>
+
+
+        <div class="factor-card color-tech">
+
+            <div class="factor-image">
+                <img src="https://images.unsplash.com/photo-1517976487492-5750f3195933?auto=format&fit=crop&w=900&q=85">
+            </div>
+
+            <div class="factor-body">
+                <div class="factor-icon">✦</div>
+                <h3>Observation</h3>
+                <p>
+                    Satellites, sensors, measurements and environmental data.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     SIMULATOR
+===================================================== -->
+
+<section id="simulator" class="simulator">
+
+    <div class="section-kicker">03 / LIVE MODEL</div>
+
+    <h2 class="section-title">
+        Change the system.<br>
+        Watch the world respond.
+    </h2>
+
+    <p class="section-description">
+        Move the controls. The model changes the environmental indicators
+        and selects a different real-world visual state based on the
+        conditions you create.
+    </p>
+
+
+    <div class="simulator-layout">
+
+        <!-- CONTROLS -->
+
+        <div class="controls">
+
+            <div class="controls-head">
+
+                <strong>CLIMATE CONTROL PANEL</strong>
+
+                <span class="live">
+                    ● LIVE
+                </span>
+
+            </div>
+
+
+            <!-- ENERGY -->
+
+            <div class="control color-energy">
+                <div class="control-top">
+                    <span class="control-name">Renewable Energy</span>
+                    <span class="control-value" id="renewableValue">65%</span>
+                </div>
+                <input id="renewable" type="range" min="0" max="100" value="65">
+            </div>
+
+
+            <div class="control color-risk">
+                <div class="control-top">
+                    <span class="control-name">Fossil Fuel Dependence</span>
+                    <span class="control-value" id="fossilValue">35%</span>
+                </div>
+                <input id="fossil" type="range" min="0" max="100" value="35">
+            </div>
+
+
+            <div class="control color-energy">
+                <div class="control-top">
+                    <span class="control-name">Solar Infrastructure</span>
+                    <span class="control-value" id="solarValue">60%</span>
+                </div>
+                <input id="solar" type="range" min="0" max="100" value="60">
+            </div>
+
+
+            <div class="control color-energy">
+                <div class="control-top">
+                    <span class="control-name">Wind Infrastructure</span>
+                    <span class="control-value" id="windValue">55%</span>
+                </div>
+                <input id="wind" type="range" min="0" max="100" value="55">
+            </div>
+
+
+            <!-- INDUSTRY -->
+
+            <div class="control color-risk">
+                <div class="control-top">
+                    <span class="control-name">Industrial Activity</span>
+                    <span class="control-value" id="industryValue">45%</span>
+                </div>
+                <input id="industry" type="range" min="0" max="100" value="45">
+            </div>
+
+
+            <!-- TRANSPORT -->
+
+            <div class="control color-risk">
+                <div class="control-top">
+                    <span class="control-name">Road Transport Emissions</span>
+                    <span class="control-value" id="transportValue">40%</span>
+                </div>
+                <input id="transport" type="range" min="0" max="100" value="40">
+            </div>
+
+
+            <div class="control color-tech">
+                <div class="control-top">
+                    <span class="control-name">Clean Transport</span>
+                    <span class="control-value" id="cleanTransportValue">55%</span>
+                </div>
+                <input id="cleanTransport" type="range" min="0" max="100" value="55">
+            </div>
+
+
+            <div class="control color-risk">
+                <div class="control-top">
+                    <span class="control-name">Aviation</span>
+                    <span class="control-value" id="aviationValue">30%</span>
+                </div>
+                <input id="aviation" type="range" min="0" max="100" value="30">
+            </div>
+
+
+            <!-- FOREST -->
+
+            <div class="control color-agri">
+                <div class="control-top">
+                    <span class="control-name">Forest Protection</span>
+                    <span class="control-value" id="forestValue">70%</span>
+                </div>
+                <input id="forest" type="range" min="0" max="100" value="70">
+            </div>
+
+
+            <div class="control color-risk">
+                <div class="control-top">
+                    <span class="control-name">Deforestation</span>
+                    <span class="control-value" id="deforestValue">20%</span>
+                </div>
+                <input id="deforest" type="range" min="0" max="100" value="20">
+            </div>
+
+
+            <!-- AGRICULTURE -->
+
+            <div class="control color-agri">
+                <div class="control-top">
+                    <span class="control-name">Agricultural Activity</span>
+                    <span class="control-value" id="agricultureValue">55%</span>
+                </div>
+                <input id="agriculture" type="range" min="0" max="100" value="55">
+            </div>
+
+
+            <div class="control color-risk">
+                <div class="control-top">
+                    <span class="control-name">Livestock Pressure</span>
+                    <span class="control-value" id="livestockValue">35%</span>
+                </div>
+                <input id="livestock" type="range" min="0" max="100" value="35">
+            </div>
+
+
+            <!-- WATER -->
+
+            <div class="control color-water">
+                <div class="control-top">
+                    <span class="control-name">Water Efficiency</span>
+                    <span class="control-value" id="waterValue">60%</span>
+                </div>
+                <input id="water" type="range" min="0" max="100" value="60">
+            </div>
+
+
+            <div class="control color-risk">
+                <div class="control-top">
+                    <span class="control-name">Drought Pressure</span>
+                    <span class="control-value" id="droughtValue">30%</span>
+                </div>
+                <input id="drought" type="range" min="0" max="100" value="30">
+            </div>
+
+
+            <!-- WASTE -->
+
+            <div class="control color-tech">
+                <div class="control-top">
+                    <span class="control-name">Waste Management</span>
+                    <span class="control-value" id="wasteValue">60%</span>
+                </div>
+                <input id="waste" type="range" min="0" max="100" value="60">
+            </div>
+
+
+            <div class="control color-risk">
+                <div class="control-top">
+                    <span class="control-name">Food Waste</span>
+                    <span class="control-value" id="foodWasteValue">30%</span>
+                </div>
+                <input id="foodWaste" type="range" min="0" max="100" value="30">
+            </div>
+
+
+            <!-- CITIES -->
+
+            <div class="control color-risk">
+                <div class="control-top">
+                    <span class="control-name">Urbanization</span>
+                    <span class="control-value" id="urbanValue">55%</span>
+                </div>
+                <input id="urban" type="range" min="0" max="100" value="55">
+            </div>
+
+
+            <!-- TECHNOLOGY -->
+
+            <div class="control color-tech">
+                <div class="control-top">
+                    <span class="control-name">Climate Technology</span>
+                    <span class="control-value" id="technologyValue">65%</span>
+                </div>
+                <input id="technology" type="range" min="0" max="100" value="65">
+            </div>
+
+
+            <!-- PEOPLE -->
+
+            <div class="control color-people">
+                <div class="control-top">
+                    <span class="control-name">Public Awareness</span>
+                    <span class="control-value" id="awarenessValue">70%</span>
+                </div>
+                <input id="awareness" type="range" min="0" max="100" value="70">
+            </div>
+
+
+            <!-- POLICY -->
+
+            <div class="control color-people">
+                <div class="control-top">
+                    <span class="control-name">Climate Policy</span>
+                    <span class="control-value" id="policyValue">65%</span>
+                </div>
+                <input id="policy" type="range" min="0" max="100" value="65">
+            </div>
+
+
+            <!-- OCEAN -->
+
+            <div class="control color-water">
+                <div class="control-top">
+                    <span class="control-name">Ocean Protection</span>
+                    <span class="control-value" id="oceanValue">60%</span>
+                </div>
+                <input id="ocean" type="range" min="0" max="100" value="60">
+            </div>
+
+
+            <!-- ADAPTATION -->
+
+            <div class="control color-tech">
+                <div class="control-top">
+                    <span class="control-name">Climate Adaptation</span>
+                    <span class="control-value" id="adaptationValue">55%</span>
+                </div>
+                <input id="adaptation" type="range" min="0" max="100" value="55">
+            </div>
+
+        </div>
+
+
+        <!-- WORLD -->
+
+        <div class="world-panel">
+
+            <div class="world-image" id="worldImage">
+
+                <img
+                    id="simulationImage"
+                    src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1800&q=90"
+                    alt="Climate simulation">
+
+                <div class="visual-effects">
+                    <div class="effect green"></div>
+                    <div class="effect red"></div>
+                    <div class="effect blue"></div>
+                </div>
+
+                <div class="world-status">
+                    <span></span>
+                    WORLD STATE: <b id="worldState">BALANCED</b>
+                </div>
+
+                <div class="world-caption">
+
+                    <div class="category" id="sceneCategory">
+                        ECOSYSTEM
+                    </div>
+
+                    <h2 id="sceneTitle">
+                        Balanced Climate System
+                    </h2>
+
+                    <p id="sceneDescription">
+                        The current combination of factors creates a
+                        relatively balanced system.
+                    </p>
+
+                </div>
+
+                <div class="world-source" id="sceneSource">
+                    PHOTO REFERENCE
+                </div>
+
+            </div>
+
+
+            <!-- METRICS -->
+
+            <div class="metrics">
+
+                <div class="metric">
+                    <div class="metric-label">CLIMATE HEALTH</div>
+                    <div class="metric-number" id="health">72</div>
+                    <div class="metric-bar">
+                        <div id="healthBar"></div>
+                    </div>
+                </div>
+
+                <div class="metric">
+                    <div class="metric-label">EMISSION PRESSURE</div>
+                    <div class="metric-number" id="emissions">34</div>
+                    <div class="metric-bar">
+                        <div id="emissionBar"></div>
+                    </div>
+                </div>
+
+                <div class="metric">
+                    <div class="metric-label">ECOSYSTEM HEALTH</div>
+                    <div class="metric-number" id="ecosystem">68</div>
+                    <div class="metric-bar">
+                        <div id="ecosystemBar"></div>
+                    </div>
+                </div>
+
+                <div class="metric">
+                    <div class="metric-label">RESILIENCE</div>
+                    <div class="metric-number" id="resilience">70</div>
+                    <div class="metric-bar">
+                        <div id="resilienceBar"></div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="response-box">
+
+                <div class="response-head">
+                    <strong>MODEL RESPONSE</strong>
+                    <span id="responseTag">SYSTEM STABLE</span>
+                </div>
+
+                <p id="responseText">
+                    Your current settings represent a mixed climate
+                    transition. Try changing several factors and observe
+                    how the visual world changes.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- SCENARIOS -->
+
+    <div style="margin-top:45px">
+
+        <div class="section-kicker">QUICK SCENARIOS</div>
+
+        <div class="scenario-grid">
+
+            <button class="scenario" onclick="scenario('renewable')">
+                <strong>☀ Renewable Future</strong>
+                <span>High clean energy + technology</span>
+            </button>
+
+            <button class="scenario" onclick="scenario('forest')">
+                <strong>🌳 Forest Protection</strong>
+                <span>Strong forests + low deforestation</span>
+            </button>
+
+            <button class="scenario" onclick="scenario('drought')">
+                <strong>💧 Water Stress</strong>
+                <span>Low water security + high drought</span>
+            </button>
+
+            <button class="scenario" onclick="scenario('industrial')">
+                <strong>🏭 Industrial Pressure</strong>
+                <span>High industry + fossil dependence</span>
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     OBJECTS
+===================================================== -->
+
+<section>
+
+    <div class="section-kicker">04 / OBJECTS</div>
+
+    <h2 class="section-title">The things that<br>shape the system.</h2>
+
+    <p class="section-description">
+        The climate system is made up of real infrastructure and objects.
+        These are the technologies, vehicles and systems that people interact
+        with every day.
+    </p>
+
+
+    <div class="object-grid">
+
+        <div class="object-card">
+            <img src="https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=800&q=85">
+            <div class="object-info">
+                <strong>Solar panels</strong>
+                <p>Generate electricity without direct fossil fuel combustion.</p>
+            </div>
+        </div>
+
+        <div class="object-card">
+            <img src="https://images.unsplash.com/photo-1466611653911-95081537e5b7?auto=format&fit=crop&w=800&q=85">
+            <div class="object-info">
+                <strong>Wind turbines</strong>
+                <p>Convert moving air into electrical energy.</p>
+            </div>
+        </div>
+
+        <div class="object-card">
+            <img src="https://images.unsplash.com/photo-1503742815154-3c1f0f6a7c42?auto=format&fit=crop&w=800&q=85">
+            <div class="object-info">
+                <strong>Urban transport</strong>
+                <p>Transport systems influence energy demand and emissions.</p>
+            </div>
+        </div>
+
+        <div class="object-card">
+            <img src="https://images.unsplash.com/photo-1494412651409-8963ce7935a7?auto=format&fit=crop&w=800&q=85">
+            <div class="object-info">
+                <strong>Industry</strong>
+                <p>Manufacturing requires energy, materials and infrastructure.</p>
+            </div>
+        </div>
+
+        <div class="object-card">
+            <img src="https://images.unsplash.com/photo-1538300342682-cf57afb97285?auto=format&fit=crop&w=800&q=85">
+            <div class="object-info">
+                <strong>Water systems</strong>
+                <p>Reservoirs and water infrastructure support communities.</p>
+            </div>
+        </div>
+
+        <div class="object-card">
+            <img src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&w=800&q=85">
+            <div class="object-info">
+                <strong>Recycling</strong>
+                <p>Waste management can reduce material and environmental pressure.</p>
+            </div>
+        </div>
+
+        <div class="object-card">
+            <img src="https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?auto=format&fit=crop&w=800&q=85">
+            <div class="object-info">
+                <strong>Power grid</strong>
+                <p>Electricity infrastructure connects energy production and users.</p>
+            </div>
+        </div>
+
+        <div class="object-card">
+            <img src="https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=800&q=85">
+            <div class="object-info">
+                <strong>Technology</strong>
+                <p>Digital tools can monitor and manage environmental systems.</p>
+            </div>
+        </div>
+
+        <div class="object-card">
+            <img src="https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?auto=format&fit=crop&w=800&q=85">
+            <div class="object-info">
+                <strong>Infrastructure</strong>
+                <p>Built systems determine how communities respond to risk.</p>
+            </div>
+        </div>
+
+        <div class="object-card">
+            <img src="https://images.unsplash.com/photo-1520962917960-7b0f5e7e5b7f?auto=format&fit=crop&w=800&q=85">
+            <div class="object-info">
+                <strong>Satellite observation</strong>
+                <p>Earth observation supports environmental monitoring.</p>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     PEOPLE
+===================================================== -->
+
+<section id="people" class="people-section">
+
+    <div class="section-kicker">05 / PEOPLE</div>
+
+    <h2 class="section-title">
+        Climate change<br>is also human.
+    </h2>
+
+    <p class="section-description">
+        Communities experience environmental change differently.
+        Education, adaptation, infrastructure and collective action
+        all influence how societies respond.
+    </p>
+
+
+    <div class="people-grid">
+
+        <div class="person-card">
+
+            <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1000&q=85">
+
+            <div class="person-text">
+                <small>COMMUNITY</small>
+                <h3>People working together</h3>
+                <p>
+                    Collective action can influence how communities
+                    respond to environmental challenges.
+                </p>
+            </div>
+
+        </div>
+
+
+        <div class="person-card">
+
+            <img src="https://images.unsplash.com/photo-1542810634-71277d95dcbb?auto=format&fit=crop&w=1000&q=85">
+
+            <div class="person-text">
+                <small>EDUCATION</small>
+                <h3>The next generation</h3>
+                <p>
+                    Climate literacy helps young people understand
+                    systems and make informed decisions.
+                </p>
+            </div>
+
+        </div>
+
+
+        <div class="person-card">
+
+            <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1000&q=85">
+
+            <div class="person-text">
+                <small>TECHNOLOGY</small>
+                <h3>People using technology</h3>
+                <p>
+                    Data and digital tools can help communities
+                    understand complex environmental systems.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     PRODUCT / CO2 CAPTURE SIMULATOR
+===================================================== -->
+
+<section id="product">
+    <div class="section-kicker">06 / CO₂ CAPTURE DEVICE</div>
+    <h2 class="section-title">Capture carbon dioxide.<br>Understand where it goes.</h2>
+    <p class="section-description">
+        An interactive model of a proposed direct-air-capture system.
+        Change the operating conditions and follow the physical pathway from ambient air
+        to captured CO₂ and durable storage.
+    </p>
+
+    <div style="margin-top:32px;border:1px solid rgba(255,255,255,.12);border-radius:22px;overflow:hidden;background:#071018;box-shadow:0 25px 80px rgba(0,0,0,.35);">
+        <iframe
+            title="Interactive CO₂ capture device simulator"
+            srcdoc="&lt;!doctype html&gt;&lt;html lang=&quot;en&quot;&gt;&lt;head&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;CO2 Capture System — Interactive Simulator&lt;/title&gt;&lt;style&gt;
+:root{--bg:#071018;--panel:#0d1b26;--line:#284351;--text:#f4f8fa;--muted:#a9bcc6;--cyan:#52e6ff;--green:#70e1a2;--orange:#ffbf69}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 70% 0%,#123443 0,#071018 42%,#04090d 100%);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif;line-height:1.55}.wrap{max-width:1250px;margin:auto;padding:32px 24px 80px}.hero{padding:38px 0 28px;border-bottom:1px solid var(--line)}.eyebrow{color:var(--cyan);font-weight:800;letter-spacing:.12em;font-size:13px}h1{font-size:clamp(38px,6vw,76px);line-height:.98;margin:14px 0 18px;max-width:900px}h2{font-size:30px;margin:0 0 10px}h3{margin:0 0 7px}p{color:var(--muted);font-size:17px}.lead{max-width:850px;font-size:20px}.grid{display:grid;grid-template-columns:1.25fr .75fr;gap:22px;margin-top:24px}.card{background:linear-gradient(145deg,rgba(16,37,50,.96),rgba(9,22,31,.96));border:1px solid var(--line);border-radius:22px;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.25)}.machine{min-height:530px;position:relative;overflow:hidden}.machine-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.status{padding:8px 12px;border-radius:999px;border:1px solid #35606e;color:var(--cyan);font-size:12px;font-weight:800}.airline{display:grid;grid-template-columns:1fr 240px 1fr;gap:14px;align-items:center;margin:45px 0}.air{height:150px;border:1px dashed #3e6674;border-radius:18px;padding:16px;position:relative;overflow:hidden}.air strong{display:block;margin-bottom:5px}.air small{color:var(--muted)}.stream{position:absolute;left:10px;right:10px;bottom:24px;height:4px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);animation:flow 1.5s linear infinite}@keyframes flow{from{transform:translateX(-80%)}to{transform:translateX(80%)}}.device{height:220px;border:2px solid #4a6a77;border-radius:24px;background:linear-gradient(160deg,#1a3543,#09141c);padding:18px;position:relative;box-shadow:inset 0 0 35px rgba(82,230,255,.07),0 15px 40px rgba(0,0,0,.4)}.device-title{font-weight:900;letter-spacing:.08em;font-size:13px}.module{height:95px;margin-top:18px;border-radius:14px;background:repeating-linear-gradient(90deg,#193946 0 8px,#0e2632 8px 16px);border:1px solid #4c7785;position:relative;overflow:hidden}.co2{position:absolute;width:13px;height:13px;border-radius:50%;background:#ff7d7d;box-shadow:0 0 15px #ff7d7d}.c1{left:5%;top:40%;animation:cap 3s linear infinite}.c2{left:30%;top:20%;animation:cap 3s 1s linear infinite}.c3{left:55%;top:55%;animation:cap 3s 2s linear infinite}@keyframes cap{0%{transform:translateX(0);opacity:1}65%{transform:translateX(120px);opacity:.9}100%{transform:translateX(180px);opacity:0}}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:20px}.metric{background:#08151d;border:1px solid #213b47;border-radius:14px;padding:14px}.metric span{display:block;color:var(--muted);font-size:12px}.metric b{font-size:22px}.control{margin:15px 0 22px}.control label{display:flex;justify-content:space-between;font-weight:700}.value{color:var(--cyan)}input[type=range]{width:100%;accent-color:var(--cyan);margin-top:10px}select{width:100%;padding:12px;background:#071018;color:white;border:1px solid var(--line);border-radius:10px;font-size:15px}.explain{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:20px}.step{padding:18px;border:1px solid var(--line);border-radius:16px;background:rgba(6,18,25,.7)}.num{color:var(--cyan);font-weight:900;font-size:13px}.callout{border-left:4px solid var(--orange);padding:15px 18px;background:rgba(255,191,105,.07);margin-top:18px}.good{border-left-color:var(--green);background:rgba(112,225,162,.07)}.sources{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:20px}.source{padding:18px;border:1px solid var(--line);border-radius:16px}.source b{font-size:18px}.source p{font-size:15px;margin-bottom:0}footer{margin-top:30px;color:#79909b;font-size:13px}@media(max-width:900px){.grid{grid-template-columns:1fr}.airline{grid-template-columns:1fr}.explain{grid-template-columns:1fr 1fr}.metrics{grid-template-columns:1fr 1fr}}@media(max-width:560px){.wrap{padding:20px 14px 60px}.explain,.sources{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}h1{font-size:42px}}
+&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;div class=&quot;wrap&quot;&gt;&lt;header class=&quot;hero&quot;&gt;&lt;div class=&quot;eyebrow&quot;&gt;06 / CO₂ CAPTURE DEVICE — INTERACTIVE MODEL&lt;/div&gt;&lt;h1&gt;Where does the CO₂ go?&lt;/h1&gt;&lt;p class=&quot;lead&quot;&gt;Explore a conceptual direct-air-capture system. The machine does not make carbon dioxide vanish: it separates a portion of CO₂ from air, concentrates it, and sends it to a storage or use pathway.&lt;/p&gt;&lt;/header&gt;&lt;div class=&quot;grid&quot;&gt;&lt;section class=&quot;card machine&quot;&gt;&lt;div class=&quot;machine-top&quot;&gt;&lt;div&gt;&lt;h2&gt;Live capture system&lt;/h2&gt;&lt;p style=&quot;margin:0&quot;&gt;Watch the pathway as you change the operating conditions.&lt;/p&gt;&lt;/div&gt;&lt;div class=&quot;status&quot; id=&quot;status&quot;&gt;CAPTURING&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;airline&quot;&gt;&lt;div class=&quot;air&quot;&gt;&lt;strong&gt;AMBIENT AIR IN&lt;/strong&gt;&lt;small&gt;CO₂: &lt;span id=&quot;inppm&quot;&gt;420&lt;/span&gt; ppm&lt;/small&gt;&lt;div class=&quot;stream&quot;&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;device&quot;&gt;&lt;div class=&quot;device-title&quot;&gt;DIRECT AIR CAPTURE UNIT&lt;/div&gt;&lt;div class=&quot;module&quot;&gt;&lt;span class=&quot;co2 c1&quot;&gt;&lt;/span&gt;&lt;span class=&quot;co2 c2&quot;&gt;&lt;/span&gt;&lt;span class=&quot;co2 c3&quot;&gt;&lt;/span&gt;&lt;/div&gt;&lt;small style=&quot;color:#9eb3bd&quot;&gt;Capture material selectively holds CO₂.&lt;/small&gt;&lt;/div&gt;&lt;div class=&quot;air&quot;&gt;&lt;strong&gt;TREATED AIR OUT&lt;/strong&gt;&lt;small&gt;CO₂: &lt;span id=&quot;outppm&quot;&gt;336&lt;/span&gt; ppm&lt;/small&gt;&lt;div class=&quot;stream&quot;&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;metrics&quot;&gt;&lt;div class=&quot;metric&quot;&gt;&lt;span&gt;CO₂ removed from processed air&lt;/span&gt;&lt;b id=&quot;removed&quot;&gt;84 ppm&lt;/b&gt;&lt;/div&gt;&lt;div class=&quot;metric&quot;&gt;&lt;span&gt;Capture rate&lt;/span&gt;&lt;b id=&quot;rate&quot;&gt;80%&lt;/b&gt;&lt;/div&gt;&lt;div class=&quot;metric&quot;&gt;&lt;span&gt;CO₂ captured / hour&lt;/span&gt;&lt;b id=&quot;kg&quot;&gt;0.77 kg&lt;/b&gt;&lt;/div&gt;&lt;div class=&quot;metric&quot;&gt;&lt;span&gt;CO₂ captured / run&lt;/span&gt;&lt;b id=&quot;total&quot;&gt;0.77 kg&lt;/b&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;callout good&quot;&gt;&lt;strong&gt;This is not the Earth&#x27;s atmospheric concentration.&lt;/strong&gt;&lt;br&gt;&lt;span style=&quot;color:var(--muted)&quot;&gt;The outlet value describes only the air that has passed through this device. The real atmosphere is enormous, so meaningful climate impact depends on sustained operation at large scale.&lt;/span&gt;&lt;/div&gt;&lt;/section&gt;&lt;aside class=&quot;card&quot;&gt;&lt;h2&gt;Control the system&lt;/h2&gt;&lt;p&gt;Each control represents a real engineering trade-off.&lt;/p&gt;&lt;div class=&quot;control&quot;&gt;&lt;label&gt;Airflow &lt;span class=&quot;value&quot; id=&quot;flowV&quot;&gt;1,000 m³/h&lt;/span&gt;&lt;/label&gt;&lt;input id=&quot;flow&quot; type=&quot;range&quot; min=&quot;200&quot; max=&quot;5000&quot; step=&quot;100&quot; value=&quot;1000&quot;&gt;&lt;/div&gt;&lt;div class=&quot;control&quot;&gt;&lt;label&gt;Capture efficiency &lt;span class=&quot;value&quot; id=&quot;effV&quot;&gt;80%&lt;/span&gt;&lt;/label&gt;&lt;input id=&quot;eff&quot; type=&quot;range&quot; min=&quot;0&quot; max=&quot;100&quot; value=&quot;80&quot;&gt;&lt;/div&gt;&lt;div class=&quot;control&quot;&gt;&lt;label&gt;Capture-material capacity &lt;span class=&quot;value&quot; id=&quot;capV&quot;&gt;85%&lt;/span&gt;&lt;/label&gt;&lt;input id=&quot;cap&quot; type=&quot;range&quot; min=&quot;20&quot; max=&quot;100&quot; value=&quot;85&quot;&gt;&lt;/div&gt;&lt;div class=&quot;control&quot;&gt;&lt;label&gt;Operating time &lt;span class=&quot;value&quot; id=&quot;hrsV&quot;&gt;1 h&lt;/span&gt;&lt;/label&gt;&lt;input id=&quot;hrs&quot; type=&quot;range&quot; min=&quot;1&quot; max=&quot;24&quot; value=&quot;1&quot;&gt;&lt;/div&gt;&lt;div class=&quot;control&quot;&gt;&lt;label&gt;Electricity source&lt;/label&gt;&lt;select id=&quot;power&quot;&gt;&lt;option value=&quot;renew&quot;&gt;Renewable electricity&lt;/option&gt;&lt;option value=&quot;grid&quot;&gt;Mixed grid electricity&lt;/option&gt;&lt;option value=&quot;fossil&quot;&gt;Fossil-heavy electricity&lt;/option&gt;&lt;/select&gt;&lt;/div&gt;&lt;div class=&quot;callout&quot;&gt;&lt;strong&gt;Why power matters:&lt;/strong&gt;&lt;br&gt;&lt;span style=&quot;color:var(--muted)&quot;&gt;Capture requires energy. Cleaner electricity reduces the system&#x27;s own associated emissions, helping the removal process deliver a larger net climate benefit.&lt;/span&gt;&lt;/div&gt;&lt;/aside&gt;&lt;/div&gt;&lt;section class=&quot;card&quot; style=&quot;margin-top:22px&quot;&gt;&lt;h2&gt;Follow one CO₂ molecule through the system&lt;/h2&gt;&lt;p&gt;This is the missing physical explanation: the number changes because a separation process has happened.&lt;/p&gt;&lt;div class=&quot;explain&quot;&gt;&lt;div class=&quot;step&quot;&gt;&lt;div class=&quot;num&quot;&gt;01 — AIR INTAKE&lt;/div&gt;&lt;h3&gt;Move air&lt;/h3&gt;&lt;p&gt;Fans bring large volumes of ordinary atmospheric air into contact with the capture material.&lt;/p&gt;&lt;/div&gt;&lt;div class=&quot;step&quot;&gt;&lt;div class=&quot;num&quot;&gt;02 — CAPTURE&lt;/div&gt;&lt;h3&gt;Hold CO₂&lt;/h3&gt;&lt;p&gt;A sorbent or other capture material is designed to interact preferentially with CO₂ while most other air passes through.&lt;/p&gt;&lt;/div&gt;&lt;div class=&quot;step&quot;&gt;&lt;div class=&quot;num&quot;&gt;03 — REGENERATION&lt;/div&gt;&lt;h3&gt;Release CO₂&lt;/h3&gt;&lt;p&gt;Heat, pressure changes, humidity changes or another process can release the captured CO₂ from the material.&lt;/p&gt;&lt;/div&gt;&lt;div class=&quot;step&quot;&gt;&lt;div class=&quot;num&quot;&gt;04 — CONCENTRATE&lt;/div&gt;&lt;h3&gt;Collect the gas&lt;/h3&gt;&lt;p&gt;The separated CO₂ is now much more concentrated than it was in ambient air, making transport, storage or controlled use possible.&lt;/p&gt;&lt;/div&gt;&lt;div class=&quot;step&quot;&gt;&lt;div class=&quot;num&quot;&gt;05 — STORE / USE&lt;/div&gt;&lt;h3&gt;Keep it out of air&lt;/h3&gt;&lt;p&gt;For removal to last, the CO₂ needs a durable storage pathway such as geological storage or mineralisation, or a use pathway that does not quickly return it to the atmosphere.&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;&lt;/section&gt;&lt;section class=&quot;card&quot; style=&quot;margin-top:22px&quot;&gt;&lt;h2&gt;Why does removing CO₂ help?&lt;/h2&gt;&lt;p&gt;CO₂ is a greenhouse gas. It absorbs and re-emits infrared radiation, contributing to the warming effect of the atmosphere. Increasing atmospheric CO₂ therefore changes Earth&#x27;s energy balance.&lt;/p&gt;&lt;div class=&quot;grid&quot; style=&quot;margin-top:15px&quot;&gt;&lt;div&gt;&lt;div class=&quot;callout good&quot;&gt;&lt;strong&gt;Emission reduction&lt;/strong&gt;&lt;br&gt;&lt;span style=&quot;color:var(--muted)&quot;&gt;Prevents additional greenhouse gases from entering the atmosphere — for example, by replacing fossil electricity with low-carbon electricity or improving efficiency.&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;callout&quot;&gt;&lt;strong&gt;Carbon removal&lt;/strong&gt;&lt;br&gt;&lt;span style=&quot;color:var(--muted)&quot;&gt;Removes CO₂ that is already in the atmosphere and transfers it to a durable reservoir.&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;h3&gt;The climate-accounting idea&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;Atmospheric CO₂ change ≈ emissions added − durable removals.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;That is why a capture machine can be useful, but it is not a substitute for reducing emissions. If a capture system uses fossil energy and creates nearly as much CO₂ as it removes, its net effect is much smaller.&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;&lt;/section&gt;&lt;section class=&quot;card&quot; style=&quot;margin-top:22px&quot;&gt;&lt;h2&gt;What else can reduce greenhouse-gas emissions?&lt;/h2&gt;&lt;p&gt;Climate action is not one machine. Different sources require different interventions.&lt;/p&gt;&lt;div class=&quot;sources&quot;&gt;&lt;div class=&quot;source&quot;&gt;&lt;b&gt;⚡ Electricity&lt;/b&gt;&lt;p&gt;Replace high-emission fossil generation with renewable or other low-carbon electricity, and improve efficiency so less energy is required.&lt;/p&gt;&lt;/div&gt;&lt;div class=&quot;source&quot;&gt;&lt;b&gt;🚗 Transport&lt;/b&gt;&lt;p&gt;Use efficient vehicles, public transport, walking, cycling and electrification where the electricity supply is low-carbon.&lt;/p&gt;&lt;/div&gt;&lt;div class=&quot;source&quot;&gt;&lt;b&gt;🏭 Industry&lt;/b&gt;&lt;p&gt;Improve energy efficiency, electrify suitable processes, reduce material waste and develop lower-emission industrial processes.&lt;/p&gt;&lt;/div&gt;&lt;div class=&quot;source&quot;&gt;&lt;b&gt;🌳 Land &amp; forests&lt;/b&gt;&lt;p&gt;Protect forests and restore degraded ecosystems so carbon remains stored in vegetation and soils, while avoiding land-use emissions.&lt;/p&gt;&lt;/div&gt;&lt;div class=&quot;source&quot;&gt;&lt;b&gt;🐄 Methane &amp; waste&lt;/b&gt;&lt;p&gt;Reduce methane leaks, improve waste management and capture landfill gas where appropriate.&lt;/p&gt;&lt;/div&gt;&lt;div class=&quot;source&quot;&gt;&lt;b&gt;🌾 Agriculture&lt;/b&gt;&lt;p&gt;Improve nutrient management, reduce avoidable food loss and use farming practices that can lower emissions while maintaining food production.&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;&lt;/section&gt;&lt;footer&gt;Educational model. Values are illustrative, not a measured performance claim for a real machine. The simulator demonstrates the logic of CO₂ separation and net-removal accounting.&lt;/footer&gt;&lt;/div&gt;&lt;script&gt;(function(){const $=id=&gt;document.getElementById(id);const flow=$(&#x27;flow&#x27;),eff=$(&#x27;eff&#x27;),cap=$(&#x27;cap&#x27;),hrs=$(&#x27;hrs&#x27;),power=$(&#x27;power&#x27;);const density=1.84,ppm=420;function update(){const f=+flow.value,e=+eff.value/100,c=+cap.value/100,h=+hrs.value, effective=e*c, removed=ppm*effective,out=ppm-removed,kg=f*(ppm/1000000)*density*effective,total=kg*h;$(&#x27;flowV&#x27;).textContent=f.toLocaleString()+&#x27; m³/h&#x27;;$(&#x27;effV&#x27;).textContent=Math.round(e*100)+&#x27;%&#x27;;$(&#x27;capV&#x27;).textContent=Math.round(c*100)+&#x27;%&#x27;;$(&#x27;hrsV&#x27;).textContent=h+&#x27; h&#x27;;$(&#x27;inppm&#x27;).textContent=ppm;$(&#x27;outppm&#x27;).textContent=Math.round(out);$(&#x27;removed&#x27;).textContent=Math.round(removed)+&#x27; ppm&#x27;;$(&#x27;rate&#x27;).textContent=Math.round(effective*100)+&#x27;%&#x27;;$(&#x27;kg&#x27;).textContent=kg.toFixed(2)+&#x27; kg&#x27;;$(&#x27;total&#x27;).textContent=total.toFixed(2)+&#x27; kg&#x27;;let net=effective;if(power.value===&#x27;fossil&#x27;)net*=.65;if(power.value===&#x27;grid&#x27;)net*=.85;$(&#x27;status&#x27;).textContent=effective===0?&#x27;BYPASS&#x27;:effective&lt;.35?&#x27;LOW CAPTURE&#x27;:net&lt;.5?&#x27;CAPTURING&#x27;:&#x27;HIGH CAPTURE&#x27;}[flow,eff,cap,hrs,power].forEach(x=&gt;x.addEventListener(&#x27;input&#x27;,update));update()})()&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
+"
+            style="display:block;width:100%;height:1500px;border:0;background:#071018;"
+            loading="eager">
+        </iframe>
+    </div>
+</section>
+
+
+<!-- =====================================================
+     EXPERIMENT
+===================================================== -->
+
+<section id="experiment" class="experiment">
+
+    <div class="section-kicker">07 / EXPERIMENT</div>
+
+    <h2 class="section-title">Turn curiosity<br>into evidence.</h2>
+
+    <p class="section-description">
+        The platform can be used alongside scientific investigations
+        to explore relationships between variables.
+    </p>
+
+
+    <div class="experiment-grid">
+
+        <div class="experiment-card">
+
+            <h3>SCIENTIFIC INVESTIGATION</h3>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <p>
+                    Select an independent variable such as renewable
+                    energy, forest protection or water efficiency.
+                </p>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <p>
+                    Keep other variables controlled where appropriate.
+                </p>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <p>
+                    Record the change in the dependent indicators.
+                </p>
+            </div>
+
+            <div class="step">
+                <div class="step-number">4</div>
+                <p>
+                    Repeat trials and identify patterns.
+                </p>
+            </div>
+
+        </div>
+
+
+        <div class="experiment-card">
+
+            <h3>KEY QUESTIONS</h3>
+
+            <div class="step">
+                <div class="step-number">?</div>
+                <p>
+                    What happens when renewable energy increases?
+                </p>
+            </div>
+
+            <div class="step">
+                <div class="step-number">?</div>
+                <p>
+                    How does deforestation influence ecosystem health?
+                </p>
+            </div>
+
+            <div class="step">
+                <div class="step-number">?</div>
+                <p>
+                    What happens when drought pressure rises?
+                </p>
+            </div>
+
+            <div class="step">
+                <div class="step-number">?</div>
+                <p>
+                    Can adaptation improve resilience even under higher risk?
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     SOURCES
+===================================================== -->
+
+<section>
+
+    <div class="section-kicker">08 / SOURCES</div>
+
+    <h2 class="section-title">Evidence matters.</h2>
+
+    <p class="section-description">
+        The simulator is an educational model. Real climate analysis
+        requires measured data, validated scientific models and
+        appropriate uncertainty analysis.
+    </p>
+
+
+    <div class="sources-grid">
+
+        <div class="source">
+            <strong>NASA</strong>
+            <p>
+                Earth observation, satellite imagery and climate information.
+            </p>
+        </div>
+
+        <div class="source">
+            <strong>NOAA</strong>
+            <p>
+                Ocean, atmosphere and climate observations.
+            </p>
+        </div>
+
+        <div class="source">
+            <strong>IPCC</strong>
+            <p>
+                Scientific assessments of climate change and its impacts.
+            </p>
+        </div>
+
+        <div class="source">
+            <strong>UNEP</strong>
+            <p>
+                Environmental science, policy and global assessments.
+            </p>
+        </div>
+
+        <div class="source">
+            <strong>WHO</strong>
+            <p>
+                Climate-related health information and evidence.
+            </p>
+        </div>
+
+        <div class="source">
+            <strong>PHOTO REFERENCES</strong>
+            <p>
+                Real-world photographic references are used for visualisation.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<footer>
+    <strong>THE CLIMATE CONFLICT — FROM AWARENESS TO ACTION</strong><br>
+    Interactive educational climate simulation. This model is simplified
+    for learning and does not represent a validated climate forecast.
+</footer>
+
+
+<script>
+
+/* =========================================================
+   HOME SLIDESHOW
+========================================================= */
+
+const slides = document.querySelectorAll(".hero-slide");
+
+const slideData = [
+
+    {
+        category:"EARTH OBSERVATION",
+        title:"One planet. Many systems.",
+        description:"Earth's atmosphere, land, oceans and human systems are interconnected."
+    },
+
+    {
+        category:"FORESTS",
+        title:"Forests are climate infrastructure.",
+        description:"Forests store carbon, support biodiversity and influence water cycles."
+    },
+
+    {
+        category:"BIODIVERSITY",
+        title:"Life responds to environmental conditions.",
+        description:"Healthy ecosystems depend on connected habitats and stable environmental conditions."
+    },
+
+    {
+        category:"LANDSCAPES",
+        title:"Every landscape tells a story.",
+        description:"Climate, land use and human activity interact across landscapes."
+    },
+
+    {
+        category:"PLANETARY SYSTEM",
+        title:"The choices connect.",
+        description:"Energy, transport, food, cities and ecosystems influence one another."
+    }
+
+];
+
+let currentSlide = 0;
+
+const slideCategory = document.getElementById("slideCategory");
+const slideTitle = document.getElementById("slideTitle");
+const slideDescription = document.getElementById("slideDescription");
+const slideDots = document.getElementById("slideDots");
+
+
+slideData.forEach((item,index)=>{
+
+    const dot=document.createElement("button");
+
+    dot.className="slide-dot";
+
+    if(index===0){
+        dot.classList.add("active");
+    }
+
+    dot.addEventListener("click",()=>showSlide(index));
+
+    slideDots.appendChild(dot);
+
+});
+
+
+function showSlide(index){
+
+    slides.forEach(slide=>slide.classList.remove("active"));
+
+    document.querySelectorAll(".slide-dot")
+        .forEach(dot=>dot.classList.remove("active"));
+
+    slides[index].classList.add("active");
+
+    document.querySelectorAll(".slide-dot")[index]
+        .classList.add("active");
+
+    slideCategory.textContent=slideData[index].category;
+    slideTitle.textContent=slideData[index].title;
+    slideDescription.textContent=slideData[index].description;
+
+    currentSlide=index;
+}
+
+
+setInterval(()=>{
+
+    currentSlide=(currentSlide+1)%slides.length;
+
+    showSlide(currentSlide);
+
+},6000);
+
+
+
+/* =========================================================
+   SIMULATOR VARIABLES
+========================================================= */
+
+const controls = [
+
+    "renewable",
+    "fossil",
+    "solar",
+    "wind",
+    "industry",
+    "transport",
+    "cleanTransport",
+    "aviation",
+    "forest",
+    "deforest",
+    "agriculture",
+    "livestock",
+    "water",
+    "drought",
+    "waste",
+    "foodWaste",
+    "urban",
+    "technology",
+    "awareness",
+    "policy",
+    "ocean",
+    "adaptation"
+
+];
+
+
+controls.forEach(id=>{
+
+    const slider=document.getElementById(id);
+
+    if(!slider) return;
+
+    slider.addEventListener("input",()=>{
+
+        updateValue(id);
+
+        calculateClimate();
+
+    });
+
+});
+
+
+function updateValue(id){
+
+    const slider=document.getElementById(id);
+    const output=document.getElementById(id+"Value");
+
+    if(slider && output){
+
+        output.textContent=slider.value+"%";
+
+    }
+
+}
+
+
+
+/* =========================================================
+   IMAGE SCENES
+========================================================= */
+
+const scenes = {
+
+    renewable:{
+
+        image:"https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=1800&q=90",
+
+        category:"ENERGY TRANSITION",
+
+        title:"Renewable Energy Expansion",
+
+        description:
+        "Clean energy infrastructure dominates the visual system. Solar and renewable infrastructure become more prominent.",
+
+        state:"CLEAN ENERGY",
+
+        source:"PHOTO REFERENCE"
+
+    },
+
+
+    wind:{
+
+        image:"https://images.unsplash.com/photo-1466611653911-95081537e5b7?auto=format&fit=crop&w=1800&q=90",
+
+        category:"WIND ENERGY",
+
+        title:"Wind Power Infrastructure",
+
+        description:
+        "Wind generation is becoming a larger part of the energy system.",
+
+        state:"WIND EXPANSION",
+
+        source:"PHOTO REFERENCE"
+
+    },
+
+
+    forest:{
+
+        image:"https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1800&q=90",
+
+        category:"FOREST",
+
+        title:"Protected Forest Landscape",
+
+        description:
+        "Strong forest protection and low deforestation create a healthier ecosystem state.",
+
+        state:"FOREST PROTECTED",
+
+        source:"PHOTO REFERENCE"
+
+    },
+
+
+    deforestation:{
+
+        image:"https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=1800&q=90",
+
+        category:"LAND USE",
+
+        title:"Deforestation Pressure",
+
+        description:
+        "Increasing land-use pressure reduces forest protection and changes the ecosystem state.",
+
+        state:"FOREST PRESSURE",
+
+        source:"PHOTO REFERENCE"
+
+    },
+
+
+    drought:{
+
+        image:"https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=1800&q=90",
+
+        category:"WATER RISK",
+
+        title:"Water Stress",
+
+        description:
+        "High drought pressure combined with low water efficiency produces a water-stressed scenario.",
+
+        state:"WATER STRESS",
+
+        source:"PHOTO REFERENCE"
+
+    },
+
+
+    water:{
+
+        image:"https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1800&q=90",
+
+        category:"WATER SECURITY",
+
+        title:"Water Management",
+
+        description:
+        "Efficient water systems improve resilience for communities and agriculture.",
+
+        state:"WATER SECURE",
+
+        source:"PHOTO REFERENCE"
+
+    },
+
+
+    industrial:{
+
+        image:"https://images.unsplash.com/photo-1565610222536-ef125c59da2e?auto=format&fit=crop&w=1800&q=90",
+
+        category:"INDUSTRY",
+
+        title:"Industrial Pressure",
+
+        description:
+        "High industrial activity and fossil dependence increase environmental pressure.",
+
+        state:"INDUSTRIAL PRESSURE",
+
+        source:"PHOTO REFERENCE"
+
+    },
+
+
+    transport:{
+
+        image:"https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&w=1800&q=90",
+
+        category:"TRANSPORT",
+
+        title:"Urban Transport Pressure",
+
+        description:
+        "High road transport activity creates a visually dense transport system.",
+
+        state:"TRANSPORT PRESSURE",
+
+        source:"PHOTO REFERENCE"
+
+    },
+
+
+    cleanTransport:{
+
+        image:"https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=1800&q=90",
+
+        category:"MOBILITY",
+
+        title:"Cleaner Mobility",
+
+        description:
+        "Cleaner transport technologies reduce pressure from conventional mobility.",
+
+        state:"CLEAN MOBILITY",
+
+        source:"PHOTO REFERENCE"
+
+    },
+
+
+    agriculture:{
+
+        image:"https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1800&q=90",
+
+        category:"AGRICULTURE",
+
+        title:"Productive Agricultural Landscape",
+
+        description:
+        "Agricultural systems become more prominent as food production increases.",
+
+        state:"AGRICULTURE",
+
+        source:"PHOTO REFERENCE"
+
+    },
+
+
+    ocean:{
+
+        image:"https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=1800&q=90",
+
+        category:"OCEAN",
+
+        title:"Coastal Ecosystem",
+
+        description:
+        "Strong ocean protection supports healthier marine and coastal systems.",
+
+        state:"OCEAN PROTECTED",
+
+        source:"PHOTO REFERENCE"
+
+    },
+
+
+    city:{
+
+        image:"https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=1800&q=90",
+
+        category:"URBAN SYSTEM",
+
+        title:"Growing Urban System",
+
+        description:
+        "Higher urbanization creates a denser built environment.",
+
+        state:"URBAN GROWTH",
+
+        source:"PHOTO REFERENCE"
+
+    },
+
+
+    technology:{
+
+        image:"https://images.unsplash.com/photo-1535378917042-10a22c95931a?auto=format&fit=crop&w=1800&q=90",
+
+        category:"TECHNOLOGY",
+
+        title:"Climate Technology",
+
+        description:
+        "Technology, sensors and digital infrastructure support environmental management.",
+
+        state:"TECH ENABLED",
+
+        source:"PHOTO REFERENCE"
+
+    },
+
+
+    community:{
+
+        image:"https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1800&q=90",
+
+        category:"PEOPLE",
+
+        title:"Community Action",
+
+        description:
+        "High awareness and climate action create a people-centred response.",
+
+        state:"COMMUNITY ACTION",
+
+        source:"PHOTO REFERENCE"
+
+    },
+
+
+    adaptation:{
+
+        image:"https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1800&q=90",
+
+        category:"ADAPTATION",
+
+        title:"Climate Resilience",
+
+        description:
+        "Adaptation increases the ability of communities and infrastructure to respond to hazards.",
+
+        state:"RESILIENT",
+
+        source:"PHOTO REFERENCE"
+
+    },
+
+
+    balanced:{
+
+        image:"https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1800&q=90",
+
+        category:"ECOSYSTEM",
+
+        title:"Balanced Climate System",
+
+        description:
+        "The current combination of factors creates a relatively balanced system.",
+
+        state:"BALANCED",
+
+        source:"PHOTO REFERENCE"
+
+    }
+
+};
+
+
+
+/* =========================================================
+   CHOOSE VISUAL SCENE
+========================================================= */
+
+function chooseScene(v){
+
+    /*
+       Priority system.
+
+       The strongest conditions get the most
+       visually distinctive image.
+    */
+
+
+    if(v.deforest >= 72){
+
+        return scenes.deforestation;
+
+    }
+
+
+    if(v.drought >= 72){
+
+        return scenes.drought;
+
+    }
+
+
+    if(v.fossil >= 75 && v.industry >= 70){
+
+        return scenes.industrial;
+
+    }
+
+
+    if(v.transport >= 75 && v.cleanTransport < 45){
+
+        return scenes.transport;
+
+    }
+
+
+    if(v.renewable >= 78 && v.solar >= 65){
+
+        return scenes.renewable;
+
+    }
+
+
+    if(v.wind >= 78 && v.renewable >= 60){
+
+        return scenes.wind;
+
+    }
+
+
+    if(v.forest >= 80 && v.deforest < 35){
+
+        return scenes.forest;
+
+    }
+
+
+    if(v.water >= 80 && v.drought < 35){
+
+        return scenes.water;
+
+    }
+
+
+    if(v.ocean >= 80){
+
+        return scenes.ocean;
+
+    }
+
+
+    if(v.urban >= 80){
+
+        return scenes.city;
+
+    }
+
+
+    if(v.technology >= 82){
+
+        return scenes.technology;
+
+    }
+
+
+    if(v.awareness >= 85 && v.policy >= 75){
+
+        return scenes.community;
+
+    }
+
+
+    if(v.adaptation >= 82){
+
+        return scenes.adaptation;
+
+    }
+
+
+    if(v.agriculture >= 78){
+
+        return scenes.agriculture;
+
+    }
+
+
+    if(v.cleanTransport >= 80){
+
+        return scenes.cleanTransport;
+
+    }
+
+
+    return scenes.balanced;
+
+}
+
+
+
+/* =========================================================
+   CHANGE WORLD IMAGE
+========================================================= */
+
+let previousScene="";
+
+function displayScene(scene){
+
+    const image=document.getElementById("simulationImage");
+    const panel=document.getElementById("worldImage");
+
+    if(previousScene===scene.title){
+
+        return;
+
+    }
+
+    previousScene=scene.title;
+
+    panel.classList.add("changing");
+
+
+    setTimeout(()=>{
+
+        image.src=scene.image;
+
+        image.alt=scene.title;
+
+        document.getElementById("sceneCategory").textContent=
+            scene.category;
+
+        document.getElementById("sceneTitle").textContent=
+            scene.title;
+
+        document.getElementById("sceneDescription").textContent=
+            scene.description;
+
+        document.getElementById("worldState").textContent=
+            scene.state;
+
+        document.getElementById("sceneSource").textContent=
+            scene.source;
+
+    },180);
+
+
+    setTimeout(()=>{
+
+        panel.classList.remove("changing");
+
+    },550);
+
+}
+
+
+
+/* =========================================================
+   CLIMATE CALCULATION
+========================================================= */
+
+function calculateClimate(){
+
+    const v={};
+
+    controls.forEach(id=>{
+
+        const el=document.getElementById(id);
+
+        if(el){
+
+            v[id]=Number(el.value);
+
+        }
+
+    });
+
+
+    /*
+       Simplified educational model.
+       It is intentionally NOT a climate forecast.
+    */
+
+
+    const mitigation = (
+
+        v.renewable*.18 +
+        v.solar*.06 +
+        v.wind*.05 +
+        v.cleanTransport*.07 +
+        v.forest*.10 +
+        v.water*.04 +
+        v.waste*.04 +
+        v.technology*.06 +
+        v.policy*.08 +
+        v.ocean*.04 +
+        v.awareness*.04 +
+        v.adaptation*.04
+
+    );
+
+
+    const pressure = (
+
+        v.fossil*.18 +
+        v.industry*.07 +
+        v.transport*.07 +
+        v.aviation*.04 +
+        v.deforest*.11 +
+        v.livestock*.04 +
+        v.drought*.06 +
+        v.foodWaste*.03 +
+        v.urban*.04
+
+    );
+
+
+    let health =
+        55 +
+        mitigation*.45 -
+        pressure*.45;
+
+
+    let ecosystem =
+        50 +
+        v.forest*.25 +
+        v.ocean*.10 +
+        v.water*.10 +
+        v.waste*.05 -
+        v.deforest*.32 -
+        v.drought*.18 -
+        v.livestock*.05;
+
+
+    let resilience =
+        35 +
+        v.adaptation*.28 +
+        v.water*.12 +
+        v.technology*.12 +
+        v.policy*.10 +
+        v.awareness*.08 -
+        v.drought*.12;
+
+
+    let emissions =
+        50 +
+        pressure*.50 -
+        mitigation*.35;
+
+
+    health=clamp(health);
+    ecosystem=clamp(ecosystem);
+    resilience=clamp(resilience);
+    emissions=clamp(emissions);
+
+
+    updateMetric("health",health);
+    updateMetric("ecosystem",ecosystem);
+    updateMetric("resilience",resilience);
+    updateMetric("emissions",emissions);
+
+
+    const scene=chooseScene(v);
+
+    displayScene(scene);
+
+
+    updateResponse(
+        health,
+        emissions,
+        ecosystem,
+        resilience,
+        v
+    );
+
+}
+
+
+
+function clamp(value){
+
+    return Math.max(0,Math.min(100,Math.round(value)));
+
+}
+
+
+
+function updateMetric(name,value){
+
+    const number=document.getElementById(name);
+
+    const bar=document.getElementById(name+"Bar");
+
+    if(number){
+
+        number.textContent=value;
+
+    }
+
+    if(bar){
+
+        bar.style.width=value+"%";
+
+    }
+
+}
+
+
+
+/* =========================================================
+   MODEL RESPONSE
+========================================================= */
+
+function updateResponse(
+    health,
+    emissions,
+    ecosystem,
+    resilience,
+    v
+){
+
+    const tag=document.getElementById("responseTag");
+
+    const text=document.getElementById("responseText");
+
+
+    if(emissions >= 75){
+
+        tag.textContent="HIGH PRESSURE";
+
+        tag.style.color="var(--red)";
+
+        text.textContent=
+        "The current settings create high environmental pressure. "
+        +"Fossil dependence, transport, industry or land-use pressure "
+        +"are dominating the system.";
+
+        return;
+
+    }
+
+
+    if(ecosystem < 35){
+
+        tag.textContent="ECOSYSTEM STRESSED";
+
+        tag.style.color="var(--orange)";
+
+        text.textContent=
+        "The ecosystem indicators are under pressure. "
+        +"Try increasing forest protection, water security and ocean protection "
+        +"or reducing deforestation and drought pressure.";
+
+        return;
+
+    }
+
+
+    if(resilience >= 80){
+
+        tag.textContent="HIGH RESILIENCE";
+
+        tag.style.color="var(--blue)";
+
+        text.textContent=
+        "The system has strong adaptation capacity. "
+        +"Technology, policy, awareness, water management and adaptation "
+        +"are helping reduce vulnerability.";
+
+        return;
+
+    }
+
+
+    if(health >= 75){
+
+        tag.textContent="POSITIVE TRANSITION";
+
+        tag.style.color="var(--green)";
+
+        text.textContent=
+        "The current settings show a strong transition toward lower "
+        +"environmental pressure and greater system resilience.";
+
+        return;
+
+    }
+
+
+    tag.textContent="SYSTEM IN TRANSITION";
+
+    tag.style.color="var(--yellow)";
+
+    text.textContent=
+    "The system is in transition. Experiment with different combinations "
+    +"rather than changing only one factor.";
+
+}
+
+
+
+/* =========================================================
+   SCENARIOS
+========================================================= */
+
+function scenario(type){
+
+    const values={};
+
+
+    if(type==="renewable"){
+
+        Object.assign(values,{
+
+            renewable:92,
+            fossil:12,
+            solar:90,
+            wind:88,
+            industry:50,
+            transport:35,
+            cleanTransport:85,
+            aviation:25,
+            forest:78,
+            deforest:15,
+            agriculture:55,
+            livestock:30,
+            water:75,
+            drought:20,
+            waste:80,
+            foodWaste:18,
+            urban:55,
+            technology:90,
+            awareness:85,
+            policy:90,
+            ocean:75,
+            adaptation:82
+
+        });
+
+    }
+
+
+    if(type==="forest"){
+
+        Object.assign(values,{
+
+            renewable:65,
+            fossil:30,
+            solar:65,
+            wind:60,
+            industry:40,
+            transport:35,
+            cleanTransport:65,
+            aviation:20,
+            forest:95,
+            deforest:8,
+            agriculture:50,
+            livestock:25,
+            water:75,
+            drought:20,
+            waste:70,
+            foodWaste:20,
+            urban:45,
+            technology:75,
+            awareness:85,
+            policy:85,
+            ocean:80,
+            adaptation:75
+
+        });
+
+    }
+
+
+    if(type==="drought"){
+
+        Object.assign(values,{
+
+            renewable:45,
+            fossil:50,
+            solar:55,
+            wind:45,
+            industry:50,
+            transport:50,
+            cleanTransport:45,
+            aviation:40,
+            forest:40,
+            deforest:50,
+            agriculture:60,
+            livestock:45,
+            water:20,
+            drought:90,
+            waste:45,
+            foodWaste:40,
+            urban:65,
+            technology:55,
+            awareness:55,
+            policy:50,
+            ocean:45,
+            adaptation:40
+
+        });
+
+    }
+
+
+    if(type==="industrial"){
+
+        Object.assign(values,{
+
+            renewable:20,
+            fossil:90,
+            solar:15,
+            wind:15,
+            industry:92,
+            transport:85,
+            cleanTransport:20,
+            aviation:75,
+            forest:25,
+            deforest:80,
+            agriculture:65,
+            livestock:65,
+            water:35,
+            drought:65,
+            waste:25,
+            foodWaste:65,
+            urban:85,
+            technology:35,
+            awareness:30,
+            policy:20,
+            ocean:30,
+            adaptation:25
+
+        });
+
+    }
+
+
+    Object.keys(values).forEach(id=>{
+
+        const slider=document.getElementById(id);
+
+        if(slider){
+
+            slider.value=values[id];
+
+            updateValue(id);
+
+        }
+
+    });
+
+
+    calculateClimate();
+
+}
+
+
+
+/* =========================================================
+   IMAGE FALLBACK
+========================================================= */
+
+document.querySelectorAll("img").forEach(img=>{
+
+    img.addEventListener("error",function(){
+
+        /*
+          If an external image ever fails,
+          use a different fallback instead of
+          leaving an empty/broken image.
+        */
+
+        if(this.dataset.fallbackUsed){
+
+            return;
+
+        }
+
+        this.dataset.fallbackUsed="true";
+
+        this.src=
+        "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1400&q=80";
+
+    });
+
+});
+
+
+
+/* =========================================================
+   NAVIGATION ACTIVE STATE
+========================================================= */
+
+const sections=document.querySelectorAll("section[id]");
+const navLinks=document.querySelectorAll(".nav-link");
+
+window.addEventListener("scroll",()=>{
+
+    let current="";
+
+    sections.forEach(section=>{
+
+        const top=section.offsetTop-180;
+
+        if(window.scrollY>=top){
+
+            current=section.getAttribute("id");
+
+        }
+
+    });
+
+
+    navLinks.forEach(link=>{
+
+        link.classList.remove("active");
+
+        if(link.getAttribute("href")==="#"+current){
+
+            link.classList.add("active");
+
+        }
+
+    });
+
+});
+
+
+
+/* =========================================================
+   INITIALISE
+========================================================= */
+
+controls.forEach(updateValue);
+
+calculateClimate();
+
+</script>
+
+</body>
+</html>
